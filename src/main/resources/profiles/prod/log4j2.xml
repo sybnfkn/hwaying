@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <properties>
+        <property name="LOG_HOME">/data/logs/picnft</property>
+    </properties>
+    <Appenders>
+        <!--info级别日志-->
+        <RollingFile name="infoFileAppender"
+                     fileName="${LOG_HOME}/info.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>[%d] [%X{_traceId_}] level[%p] [%t] [%C:%L] - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+            <SizeBasedTriggeringPolicy size="100 MB"/>
+            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+
+        <!--warn级别日志-->
+        <RollingFile name="warnFileAppender"
+                     fileName="${LOG_HOME}/warn.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout>
+                <pattern>[%d] [%X{_traceId_}] level[%p] [%t] [%C:%L] - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 根日志设置 -->
+        <Root level="info">
+            <AppenderRef ref="infoFileAppender" level="info"/>
+            <AppenderRef ref="warnFileAppender" level="warn"/>
+        </Root>
+
+        <!--spring日志-->
+        <Logger name="org.springframework" level="info"/>
+        <Logger name="com.zaxxer" level="info"/>
+        <Logger name="net.infomi.tools.dao" level="info"/>
+        <!-- mybatis日志 -->
+        <Logger name="com.mybatis" level="info"/>
+    </Loggers>
+
+</Configuration>

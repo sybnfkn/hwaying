@@ -36,7 +36,75 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+<!--暂时屏蔽-->
+    <!--<dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>3.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.28</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.83</version>
+    </dependency>-->
+
+
+   <!-- <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      &lt;!&ndash; 移除 spring-boot 默认的 redis 客户端 lettuce-core &ndash;&gt;
+      <exclusions>
+        <exclusion>
+          <groupId>io.lettuce</groupId>
+          <artifactId>lettuce-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    &lt;!&ndash; 切换成 spring-boot 支持的 jedis 作为底层的 redis 客户端 &ndash;&gt;
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+    </dependency>-->
+
+
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <profile.active>dev</profile.active>
+      </properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <profile.active>prod</profile.active>
+      </properties>
+    </profile>
+  </profiles>
 
   <build>
     <plugins>
@@ -54,5 +122,19 @@
         </configuration>
       </plugin>
     </plugins>
+    <!-- 打包不带版本号 -->
+    <finalName>${project.artifactId}</finalName>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources/profiles/${profile.active}</directory>
+        <filtering>true</filtering>
+        <targetPath>config</targetPath>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/src/main/resources/mappers</directory>
+        <filtering>false</filtering>
+        <targetPath>mappers</targetPath>
+      </resource>
+    </resources>
   </build>
 </project>
